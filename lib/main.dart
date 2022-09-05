@@ -71,9 +71,9 @@ class _MyAppState extends State<MyApp> {
 /// multiple marker add in google map
 /// button press to update camera position
 /// remove null type value for Position( insert x,y,z)
-/// login page
-/// reg page
-/// profile
+/// login page imam
+/// reg page sumaiya
+/// profile osman
 
 
 
