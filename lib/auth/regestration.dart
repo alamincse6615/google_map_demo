@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
-import 'package:google_map_demo/auth/login.dart';
+import 'package:google_map_demo/auth/SigninPage.dart';
+import 'package:google_map_demo/main.dart';
+
 
 
 
@@ -102,7 +104,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 child: ElevatedButton(
                   child: const Text('Login'),
                   onPressed: () {
-                    registration();
+                    MyApp();
                   },
                 )),
             Row(
