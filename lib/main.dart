@@ -6,7 +6,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp( MyApp());
-  //AIzaSyDmdX2kq_sHbofWZl4HT96SQ1awM7Xzz90
+
 }
 
 class MyApp extends StatefulWidget {
@@ -18,7 +18,12 @@ class _MyAppState extends State<MyApp> {
   Position? location;
 
   Set<Marker> _markers = {};
+<<<<<<< HEAD
   var type  =  MapType.normal;
+=======
+  var type  =  [MapType.normal,MapType.satellite,MapType.hybrid,MapType.terrain];
+
+>>>>>>> ac69e8de752e7ef84d572a414078f7182a0ea9d9
   @override
   void initState() {
     super.initState();
@@ -37,6 +42,25 @@ class _MyAppState extends State<MyApp> {
             position: LatLng(location!.latitude, location!.longitude)
         )
     );
+    _markers.add(
+        Marker(
+            markerId: MarkerId(23.7991631.toString()+"_"+90.4219536.toString()+"_"+DateTime.now().toString()),
+            position: LatLng(23.7991631, 90.4219536)
+        )
+    );
+    _markers.add(
+        Marker(
+            markerId: MarkerId(23.8021213.toString()+"_"+90.4155165.toString()+"_"+DateTime.now().toString()),
+            position: LatLng(23.8021213, 90.4155165)
+        )
+    );
+    _markers.add(
+        Marker(
+            markerId: MarkerId(23.8133624.toString()+"_"+90.4022848.toString()+"_"+DateTime.now().toString()),
+            position: LatLng(23.8133624, 90.4022848)
+        )
+    );
+
 
     print(location);
   }
@@ -51,16 +75,24 @@ class _MyAppState extends State<MyApp> {
                   location!.latitude,
                   location!.longitude
               ),
-            zoom: 50
+
           ),
           markers: _markers,
-          mapType: type,
+          mapType: MapType.satellite
 
         ):Container(
           child: Center(
             child: Text("Loading....."),
           ),
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            setState(() {
+              location;
+            });
+          },
+          child: const Icon(Icons.location_searching_rounded),
+        ),
 
       )
     );
@@ -68,11 +100,11 @@ class _MyAppState extends State<MyApp> {
 }
 
 
-/// multiple marker add in google map
+/// multiple marker add in google map=> done
 /// button press to update camera position
 /// remove null type value for Position( insert x,y,z)
 /// login page imam
-/// reg page sumaiya
+/// reg page sumaiya => done
 /// profile osman
 
 
