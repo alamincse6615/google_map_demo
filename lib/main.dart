@@ -17,7 +17,7 @@ class _MyAppState extends State<MyApp> {
   Position? location;
 
   Set<Marker> _markers = {};
-  var type  =  MapType.normal;
+  var type  =  [MapType.normal,MapType.satellite,MapType.hybrid,MapType.terrain];
 
   @override
   void initState() {
@@ -51,16 +51,24 @@ class _MyAppState extends State<MyApp> {
                   location!.latitude,
                   location!.longitude
               ),
-            zoom: 50
+
           ),
           markers: _markers,
-          mapType: type,
+          mapType: MapType.satellite
 
         ):Container(
           child: Center(
             child: Text("Loading....."),
           ),
-        )
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            setState(() {
+              location;
+            });
+          },
+          child: const Icon(Icons.location_searching_rounded),
+        ),
 
       )
     );
