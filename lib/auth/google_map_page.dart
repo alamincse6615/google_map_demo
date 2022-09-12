@@ -20,6 +20,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     getLocation();
 
   }
+
   getLocation()async{
     location = await Geolocator.getCurrentPosition();
 

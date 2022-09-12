@@ -1,8 +1,13 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_database/ui/firebase_list.dart';
 import 'package:flutter/material.dart';
+import 'package:google_map_demo/auth/SigninPage.dart';
 import 'package:image_picker/image_picker.dart';
 
 class Profile extends StatefulWidget {
@@ -16,35 +21,57 @@ class _ProfileState extends State<Profile> {
   File? captureImage;
   User? user;
 
+  var currentUser;
+  late DatabaseReference _databaseReference;
+
+  Query dataQuery = FirebaseDatabase.instance.ref().child("Users");
+
+  String uid = "";
+
   @override
   void initState() {
-    // TODO: implement initState
+    _databaseReference = FirebaseDatabase.instance.ref().child("Users");
     super.initState();
     _firebaseInitialize();
-    geDataFromFirebase();
+    FirebaseAuth auth = FirebaseAuth.instance;
+    if(auth.currentUser==null){
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>LoginPage()));
+    }else{
+      uid = auth.currentUser!.uid.toString();
+      getUserData(auth.currentUser!.uid);
+    }
+
+
   }
+  void getUserData(id)async{
+
+
+    final ref = FirebaseDatabase.instance.ref();
+    final snapshot = await ref.child('Users/$id').get();
+    if (snapshot.exists) {
+      currentUser = snapshot.value;
+      setState(() {
+
+      });
+
+    } else {
+      print('No data available.');
+    }
+  }
+
+
+
   _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
     return firebaseApp;
-  }
-  geDataFromFirebase(){
-    FirebaseAuth auth = FirebaseAuth.instance;
-  user = auth.currentUser;
-
-
- if( user!=null){
-   /// go to login page
- }
-
-
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Edit"),
+          title: Text(currentUser['name']+"'s profile"),
         ),
-        body: user!=null?SingleChildScrollView(
+        body: currentUser!=null?SingleChildScrollView(
             child: Column(
                 children: [
                   Padding(
@@ -118,8 +145,9 @@ class _ProfileState extends State<Profile> {
                   SaveButton(),
                 ]
             )
-        ):Center(child: CircularProgressIndicator(),)
+        ):Center(child: CircularProgressIndicator())
     );
+
   }
 
   imagecamera() async {
@@ -142,20 +170,20 @@ class _ProfileState extends State<Profile> {
       children: [
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: TextFormField(
-            decoration: InputDecoration(labelText: ("Name")),
+          child: Text(
+           currentUser['name']
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: TextFormField(
-            decoration: InputDecoration(labelText: ("Phone Number")),
+          child: Text(
+              currentUser['userEmail']
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
-          child: TextFormField(
-            decoration: InputDecoration(labelText: ("Email")),
+          child: Text(
+              currentUser['userEmail']
           ),
         ),
         Padding(
@@ -163,7 +191,7 @@ class _ProfileState extends State<Profile> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Address"),
+              Text(currentUser['lat']+""+currentUser['lon']),
               TextButton.icon(
                   onPressed: () {}, icon: (Icon(Icons.edit)), label: Text(""))
             ],
@@ -186,3 +214,5 @@ class _ProfileState extends State<Profile> {
 
 
 }
+
+

@@ -1,7 +1,9 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
 import 'package:google_map_demo/auth/dashboard.dart';
 import 'package:google_map_demo/main.dart';
@@ -17,6 +19,8 @@ import 'package:google_map_demo/main.dart';
 }
 
 class _RegistrationPageState extends State<RegistrationPage> {
+   late DatabaseReference _databaseReference;
+   Position? location;
 
   _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
@@ -31,12 +35,22 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController registerController = TextEditingController();
 
+   getLocation()async{
+     location = await Geolocator.getCurrentPosition();
+
+     setState(() {
+
+     });
+     print(location);
+   }
+
 
   @override
   void initState() {
-    // TODO: implement initState
+    _databaseReference = FirebaseDatabase.instance.ref().child("Users");
     super.initState();
     print("test");
+    getLocation();
   }
 
   @override
@@ -51,7 +65,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      //controller: nameController,
+                      controller: nameController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Write your name',
@@ -143,7 +157,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
-                    //controller: nameController,
+                    controller: nameController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Write your name',
@@ -196,7 +210,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
                 Container(
                   padding: const EdgeInsets.all(10),
                   child: TextField(
-                    //controller: registerController,
+                    controller: registerController,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Registered by',
@@ -272,25 +286,43 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String userEmail = emailController.text.toString();
     String userPassword = passwordController.text.toString();
     String registeredBy = registerController.text.toString();
-    try{
-      UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: userEmail,
-          password: userPassword
-      );
-      User? user = userCredential.user;
-      setState(() {
+    if(name.length<5){
 
-      });
-      if(user != null){
-        print("Login Success");
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>DashBoard()));
+    }else{
+      try{
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: userEmail,
+            password: userPassword
+        );
+        User? user = userCredential.user;
+        setState(() {
+        });
+        if(user != null){
+          print("registration Success");
+          Map<String,String> users = {
+            'uid':user.uid,
+            'name':name,
+            'lat':location!.latitude.toString(),
+            'lon':location!.longitude.toString(),
+            'phoneNumber':phoneNumber,
+            'userEmail':userEmail,
+            'userPassword':userPassword,
+            'registeredBy':registeredBy,
+          };
+          _databaseReference.child(user.uid).set(users);
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>DashBoard()));
 
-      }else{
-        print("Something is wrong");
+        }else{
+          print("Something is wrong");
+        }
+      }catch(e){
+        print(e.toString());
       }
-    }catch(e){
-      print(e.toString());
     }
+
+
+
+
 
     // Navigator.push(context,MaterialPageRoute(builder: (context) => Dashboard()));
   }

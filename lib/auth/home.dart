@@ -28,13 +28,7 @@ class _HomeState extends State<Home> {
   }
   geDataFromFirebase(){
    FirebaseAuth auth = FirebaseAuth.instance;
-   userEmail = auth.currentUser!.email!;
-
-
-
-
-
-
+   //userEmail = auth.currentUser!.email!;
   }
 
   @override
@@ -43,7 +37,7 @@ class _HomeState extends State<Home> {
 
       body: Center(
         child: ElevatedButton(
-          child: Text(userEmail),
+          child: Text("Sign Up"),
           onPressed: (){
             Navigator.push(context, MaterialPageRoute(builder: (context)=>RegistrationPage()));
           },
