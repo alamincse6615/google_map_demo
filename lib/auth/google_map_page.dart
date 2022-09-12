@@ -1,29 +1,14 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
 import 'package:google_map_demo/auth/profile_edit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:firebase_core/firebase_core.dart';
 
-
-
-void main() async{
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    //options: DefaultFirebaseOptions.currentPlatform,
-  );
-  runApp( MyApp());
-
-}
-
-class MyApp extends StatefulWidget {
+class GoogleMapPage extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _GoogleMapPageState createState() => _GoogleMapPageState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _GoogleMapPageState extends State<GoogleMapPage> {
   Position? location;
 
   Set<Marker> _markers = {};
@@ -32,14 +17,8 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-   // getLocation();
+    getLocation();
 
-    // Timer(Duration(seconds: 5), ()=>Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context)=>DashBoard()
-    //     )
-    // )
-    //);
   }
   getLocation()async{
     location = await Geolocator.getCurrentPosition();
@@ -79,21 +58,33 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DashBoard()
+        home: Scaffold(
+          body: location!=null?GoogleMap(
+              initialCameraPosition: CameraPosition(
+                target: LatLng(
+                    location!.latitude,
+                    location!.longitude
+                ),
+
+              ),
+              markers: _markers,
+              mapType: MapType.satellite
+
+          ):Container(
+            child: Center(
+              child: Text("Loading....."),
+            ),
+          ),
+          floatingActionButton: FloatingActionButton(
+            onPressed: (){
+              setState(() {
+                location;
+              });
+            },
+            child: const Icon(Icons.location_searching_rounded),
+          ),
+
+        )
     );
   }
 }
-
-
-/// multiple marker add in google map=> done
-/// button press to update camera position
-/// remove null type value for Position( insert x,y,z)
-/// login page imam
-/// reg page sumaiya => done
-/// profile osman
-
-
-
-
-
