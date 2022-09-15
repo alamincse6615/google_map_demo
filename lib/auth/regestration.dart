@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
 import 'package:google_map_demo/auth/dashboard.dart';
 import 'package:google_map_demo/main.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 
 
@@ -286,7 +287,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
     String userEmail = emailController.text.toString();
     String userPassword = passwordController.text.toString();
     String registeredBy = registerController.text.toString();
-    if(name.length<5){
+
+    if(name.length<5 && phoneNumber.length<10 && userEmail.length<13 && userPassword.length <6){
 
     }else{
       try{
@@ -298,6 +300,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
         setState(() {
         });
         if(user != null){
+          Fluttertoast.showToast(
+              msg: "registration Success",
+                  backgroundColor: Colors.red,
+            gravity: ToastGravity.CENTER,
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 3,
+
+
+          );
           print("registration Success");
           Map<String,String> users = {
             'uid':user.uid,

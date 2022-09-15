@@ -1,7 +1,11 @@
 import 'dart:convert';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -11,6 +15,15 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+
+  _firebaseInitialize()async{
+    FirebaseApp firebaseApp =await Firebase.initializeApp();
+
+    return firebaseApp;
+  }
+
+
   bool loginWithEmail = true;
   String loginWithSectedSection = "Login With ";
   TextEditingController emailController = TextEditingController();
@@ -23,7 +36,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +91,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     child: const Text('Login',style: TextStyle(fontSize: 26),),
                     onPressed: () {
-                      registration();
+                      singin();
 
 
                     },
@@ -151,22 +163,36 @@ class _LoginPageState extends State<LoginPage> {
   }
 
 
-  registration(){
+  singin()async{
 
     String phoneNumber = phoneController.text.toString();
     String email = emailController.text.toString();
     String password = passwordController.text.toString();
 
+    try{
+      UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+      User? user = userCredential.user;
+      setState(() {
+      });
+      if(user != null){
+        Fluttertoast.showToast(
+            msg: "Singin Success",
+            backgroundColor: Colors.red,
+            gravity: ToastGravity.CENTER,
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 3,
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>DashBoard()));
 
+      }else{
+        print("Something is wrong");
+      }
+    }catch(e){
+      print(e.toString());
+    }
 
-    var data = {
-
-      "email" : email,
-      "phoneNumber" : phoneNumber,
-      "password" : password,
-
-    };
-
-    print(jsonEncode(data));
   }
 }
