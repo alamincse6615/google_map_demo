@@ -6,6 +6,7 @@ import 'package:google_map_demo/auth/dashboard.dart';
 import 'package:google_map_demo/auth/profile_edit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:location/location.dart';
 
 
 
@@ -25,21 +26,17 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   Position? location;
+  Location locationInfo = new Location();
 
+  late bool _serviceEnabled;
+  late PermissionStatus _permissionGranted;
   Set<Marker> _markers = {};
 
   var type  =  [MapType.normal,MapType.satellite,MapType.hybrid,MapType.terrain];
   @override
   void initState() {
     super.initState();
-   // getLocation();
-
-    // Timer(Duration(seconds: 5), ()=>Navigator.pushReplacement(
-    //     context,
-    //     MaterialPageRoute(builder: (context)=>DashBoard()
-    //     )
-    // )
-    //);
+    getLocationPermisstion();
   }
   getLocation()async{
     location = await Geolocator.getCurrentPosition();
@@ -74,6 +71,23 @@ class _MyAppState extends State<MyApp> {
 
 
     print(location);
+  }
+  getLocationPermisstion()async{
+    _serviceEnabled = await locationInfo.serviceEnabled();
+    if (!_serviceEnabled) {
+      _serviceEnabled = await locationInfo.requestService();
+      if (!_serviceEnabled) {
+        return;
+      }
+    }
+
+    _permissionGranted = await locationInfo.hasPermission();
+    if (_permissionGranted == PermissionStatus.denied) {
+      _permissionGranted = await locationInfo.requestPermission();
+      if (_permissionGranted != PermissionStatus.granted) {
+        return;
+      }
+    }
   }
 
   @override

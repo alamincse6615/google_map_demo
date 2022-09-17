@@ -166,8 +166,8 @@ class _LoginPageState extends State<LoginPage> {
   singin()async{
 
     String phoneNumber = phoneController.text.toString();
-    String email = emailController.text.toString();
-    String password = passwordController.text.toString();
+    String email = emailController.text.toString().trim();
+    String password = passwordController.text.toString().trim();
 
     try{
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(

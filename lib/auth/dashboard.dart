@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_map_demo/auth/google_map_page.dart';
 import 'package:google_map_demo/auth/home.dart';
 import 'package:google_map_demo/auth/profile.dart';
+import 'package:location/location.dart';
 
 class DashBoard extends StatefulWidget {
   const DashBoard({Key? key}) : super(key: key);
@@ -11,12 +12,21 @@ class DashBoard extends StatefulWidget {
 }
 
 class _DashBoardState extends State<DashBoard> {
+  late PermissionStatus _permissionGranted;
   var _page = [
     Home(),
     GoogleMapPage(),
     Profile()
   ];
   int selectedPage = 0;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
