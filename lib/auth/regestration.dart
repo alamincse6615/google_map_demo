@@ -4,12 +4,13 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:google_map_demo/dashboard.dart';
 import 'package:google_map_demo/auth/profile.dart';
 import 'package:google_map_demo/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 
+import 'package:google_map_demo/model/user_model.dart';
  class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
 
@@ -324,6 +325,17 @@ class _RegistrationPageState extends State<RegistrationPage> {
 
           );
           print("registration Success");
+          UserModel userModel = UserModel();
+          userModel.uid = user.uid;
+          userModel.name = name;
+          userModel.lat = location!.latitude.toString();
+          userModel.lon = location!.longitude.toString();
+          userModel.phoneNumber = phoneNumber;
+          userModel.userEmail = userEmail;
+          userModel.userPassword = userPassword;
+          userModel.registeredBy = registeredBy;
+
+
           Map<String,String> users = {
             'uid':user.uid,
             'name':name,
@@ -351,11 +363,5 @@ class _RegistrationPageState extends State<RegistrationPage> {
         print(e.toString());
       }
     }
-
-
-
-
-
-    // Navigator.push(context,MaterialPageRoute(builder: (context) => Dashboard()));
-  }
+}
 }

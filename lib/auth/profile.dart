@@ -6,10 +6,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:firebase_database/ui/firebase_list.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
+import 'package:google_map_demo/model/user_model.dart';
 import 'package:image_picker/image_picker.dart';
-
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
@@ -18,15 +19,16 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool loadUserData = false;
   File? captureImage;
   User? user;
-
   var currentUser;
   late DatabaseReference _databaseReference;
-
   Query dataQuery = FirebaseDatabase.instance.ref().child("Users");
-
   String uid = "";
+  late UserModel _userModel;
+  String CurrentUserName = "";
+  FirebaseStorage storage = FirebaseStorage.instance;
 
   @override
   void initState() {
@@ -48,8 +50,11 @@ class _ProfileState extends State<Profile> {
     final snapshot = await ref.child('Users/$id').get();
     if (snapshot.exists) {
       currentUser = snapshot.value;
-      setState(() {
+     _userModel = UserModel.fromJson(currentUser);
+      CurrentUserName = _userModel.name.toString();
 
+      setState(() {
+        loadUserData = true;
       });
 
     } else {
@@ -57,18 +62,18 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-
     _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
     return firebaseApp;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(currentUser['name']+"'s profile"),
+          title: Text(CurrentUserName+"'s profile"),
         ),
-        body: currentUser!=null?SingleChildScrollView(
+        body: loadUserData?SingleChildScrollView(
             child: Column(
                 children: [
                   Padding(
@@ -79,14 +84,13 @@ class _ProfileState extends State<Profile> {
                         children: [
                           Center(
                             child: CircleAvatar(
-                              maxRadius: 150,
-                              child: captureImage == null
-                                  ? CircleAvatar(
-                                maxRadius: 150,
+                              maxRadius: 101,
+                              child: captureImage == null?
+                              CircleAvatar(
+                                maxRadius: 100,
                                 backgroundImage: AssetImage("images/download.png"),
-                              )
-                                  : CircleAvatar(
-                                maxRadius: 150,
+                              ): CircleAvatar(
+                                maxRadius: 100,
                                 backgroundImage: FileImage(
                                   captureImage!,
                                 ),
@@ -94,7 +98,7 @@ class _ProfileState extends State<Profile> {
                             ),
                           ),
                           Positioned(
-                            right: 80,
+                            right: 65,
                             bottom:5,
                             child: TextButton.icon(
                                 onPressed: () {
@@ -139,7 +143,6 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-
                   TextInputField(),
                   SaveButton(),
                 ]
@@ -148,7 +151,6 @@ class _ProfileState extends State<Profile> {
     );
 
   }
-
   imagecamera() async {
     var image = await ImagePicker().pickImage(source: ImageSource.camera);
 
@@ -170,45 +172,31 @@ class _ProfileState extends State<Profile> {
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-           currentUser['name']
+          _userModel.name.toString()
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-              currentUser['userEmail']
+              _userModel.userEmail.toString()
           ),
         ),
         Padding(
           padding: const EdgeInsets.all(10.0),
           child: Text(
-              currentUser['userEmail']
+              _userModel.phoneNumber.toString()
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(currentUser['lat']+""+currentUser['lon']),
-              TextButton.icon(
-                  onPressed: () {}, icon: (Icon(Icons.edit)), label: Text(""))
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            height: 150,
-            color: Colors.red,
-          ),
-        )
       ],
     );
   }
   SaveButton() {
     return ElevatedButton.icon(
         onPressed: () {}, icon: (Icon(Icons.save)), label: Text("Save"));
+  }
+
+  uploadImageToFirebase(){
+
   }
 
 }

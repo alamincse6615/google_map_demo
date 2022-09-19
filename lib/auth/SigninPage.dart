@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:google_map_demo/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:google_map_demo/auth/profile.dart';
 import 'package:google_map_demo/auth/regestration.dart';
@@ -177,8 +177,8 @@ class _LoginPageState extends State<LoginPage> {
   singin()async{
 
     String phoneNumber = phoneController.text.toString();
-    String email = emailController.text.toString();
-    String password = passwordController.text.toString();
+    String email = emailController.text.toString().trim();
+    String password = passwordController.text.toString().trim();
 
     try{
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
