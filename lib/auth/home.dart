@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
@@ -18,6 +19,9 @@ class _HomeState extends State<Home> {
   var userEmail= "" ;
 
   late UserModel _userModel;
+  List<UserModel> userList = [];
+
+
  var allUser;
   int dataLength = 0;
 
@@ -34,43 +38,70 @@ class _HomeState extends State<Home> {
     FirebaseApp firebaseApp =await Firebase.initializeApp();
     return firebaseApp;
   }
+
   void getUserData()async{
-    final ref = FirebaseDatabase.instance.ref();
-    final snapshot = await ref.child('Users').get();
-    if (snapshot.exists) {
-      allUser = snapshot.value;
-
-      setState(() {
-
+    FirebaseDatabase.instance.ref("Users").onValue.listen((event) {
+      final data = Map<String, dynamic>.from(event.snapshot.value as Map,);
+      data.forEach((key, value) {
+        _userModel = UserModel.fromJson(value);
+        userList.add(_userModel);
       });
-
-
-    } else {
-      print('No data available.');
-    }
-
-
-
-
-
-
-
-
+      setState(() {
+        print(userList);
+      });
+    });
   }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      body: Center(
-        child: ElevatedButton(
-          child: Text("Sign Up"),
-          onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=>RegistrationPage()));
-          },
-        ),
+      appBar: AppBar(
+        title: Text("All Users"),
       ),
+      body: ListView.builder(
+          itemCount: userList.length,
+          itemBuilder: (context, index) {
+            return Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(
+                tileColor: Colors.black.withOpacity(.3),
+                title: Row(
+                  children: [
+                    Icon(Icons.person),
+                    SizedBox(width: 10,),
+                    Text(userList[index].name.toString()),
+                  ],
+                ),
+                subtitle: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.email_outlined),
+                        SizedBox(width: 10,),
+                        Text(userList[index].userEmail.toString()),
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        Icon(Icons.call),
+                        SizedBox(width: 10,),
+                        Text(
+                            userList[index].phoneNumber.toString().length>10?userList[index].phoneNumber.toString():"Not Found",
+                            style: TextStyle(
+                              color:  userList[index].phoneNumber.toString().length>10?Colors.green:Colors.red
+                            ),
+
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            );
+
+      }
+      )
 
     );
   }

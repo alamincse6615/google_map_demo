@@ -170,6 +170,7 @@ class _ProfileState extends State<Profile> {
       setState(() {});
     }
   }
+
   TextInputField() {
     return Column(
       children: [
@@ -194,6 +195,7 @@ class _ProfileState extends State<Profile> {
       ],
     );
   }
+
   SaveButton() {
     return ElevatedButton.icon(
         onPressed: () {}, icon: (Icon(Icons.save)), label: Text("Save"));
