@@ -44,8 +44,6 @@ class _ProfileState extends State<Profile> {
 
   }
   void getUserData(id)async{
-
-
     final ref = FirebaseDatabase.instance.ref();
     final snapshot = await ref.child('Users/$id').get();
     if (snapshot.exists) {
@@ -60,8 +58,7 @@ class _ProfileState extends State<Profile> {
   }
 
 
-
-  _firebaseInitialize()async{
+    _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
     return firebaseApp;
   }
@@ -112,6 +109,7 @@ class _ProfileState extends State<Profile> {
                                               FlatButton.icon(
                                                   onPressed: () {
                                                     imagecamera();
+                                                    Navigator.pop(context);
                                                   },
                                                   icon: Icon(Icons.camera),
                                                   label:
@@ -119,6 +117,7 @@ class _ProfileState extends State<Profile> {
                                               FlatButton.icon(
                                                   onPressed: () {
                                                     ImageFile();
+                                                    Navigator.pop(context);
                                                   },
                                                   icon: Icon(Icons.memory),
                                                   label:
@@ -131,7 +130,7 @@ class _ProfileState extends State<Profile> {
                                 },
                                 icon: Icon(
                                   Icons.camera_alt_outlined,
-                                  color: Colors.black,
+                                  color: Colors.red,
                                 ),
                                 label: Text("")),
                           ),
@@ -211,7 +210,6 @@ class _ProfileState extends State<Profile> {
     return ElevatedButton.icon(
         onPressed: () {}, icon: (Icon(Icons.save)), label: Text("Save"));
   }
-
 
 }
 
