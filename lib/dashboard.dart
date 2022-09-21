@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:google_map_demo/auth/google_map_page.dart';
-import 'package:google_map_demo/auth/home.dart';
+import 'package:google_map_demo/map/google_map_page.dart';
+import 'package:google_map_demo/home.dart';
 import 'package:google_map_demo/auth/profile.dart';
 import 'package:location/location.dart';
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:google_map_demo/dashboard.dart';
 import 'package:google_map_demo/auth/profile_edit.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';

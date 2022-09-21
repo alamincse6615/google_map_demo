@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -13,7 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
 import 'package:google_map_demo/model/user_model.dart';
 import 'package:image_picker/image_picker.dart';
-
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
 
@@ -65,9 +62,7 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-
-
-  _firebaseInitialize()async{
+    _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
     return firebaseApp;
   }
@@ -90,8 +85,8 @@ class _ProfileState extends State<Profile> {
                           Center(
                             child: CircleAvatar(
                               maxRadius: 101,
-                              child: captureImage == null
-                                  ? CircleAvatar(
+                              child: captureImage == null?
+                              CircleAvatar(
                                 maxRadius: 100,
                                 backgroundImage: AssetImage("images/download.png"),
                               ): CircleAvatar(
@@ -118,6 +113,7 @@ class _ProfileState extends State<Profile> {
                                               FlatButton.icon(
                                                   onPressed: () {
                                                     imagecamera();
+                                                    Navigator.pop(context);
                                                   },
                                                   icon: Icon(Icons.camera),
                                                   label:
@@ -125,6 +121,7 @@ class _ProfileState extends State<Profile> {
                                               FlatButton.icon(
                                                   onPressed: () {
                                                     ImageFile();
+                                                    Navigator.pop(context);
                                                   },
                                                   icon: Icon(Icons.memory),
                                                   label:
@@ -137,7 +134,7 @@ class _ProfileState extends State<Profile> {
                                 },
                                 icon: Icon(
                                   Icons.camera_alt_outlined,
-                                  color: Colors.black,
+                                  color: Colors.red,
                                 ),
                                 label: Text("")),
                           ),
@@ -146,7 +143,6 @@ class _ProfileState extends State<Profile> {
                       ),
                     ),
                   ),
-
                   TextInputField(),
                   SaveButton(),
                 ]

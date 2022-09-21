@@ -1,13 +1,15 @@
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_map_demo/auth/SigninPage.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:google_map_demo/dashboard.dart';
+import 'package:google_map_demo/auth/profile.dart';
 import 'package:google_map_demo/main.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+
+
 import 'package:google_map_demo/model/user_model.dart';
  class RegistrationPage extends StatefulWidget {
   const RegistrationPage({Key? key}) : super(key: key);
@@ -32,7 +34,6 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController registerController = TextEditingController();
-
    getLocation()async{
      location = await Geolocator.getCurrentPosition();
 
@@ -148,6 +149,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.center,
                   ),
+                  ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.g_mobiledata), label: Text("Singin With Google",
+                  style: TextStyle(backgroundColor: Colors.red),
+                  )),
+                  ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.facebook), label: Text("Singin With Facebook"))
                 ],
               );
             return  ListView(
@@ -240,6 +245,10 @@ class _RegistrationPageState extends State<RegistrationPage> {
                   ],
                   mainAxisAlignment: MainAxisAlignment.center,
                 ),
+                ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.g_mobiledata), label: Text("Singin With Google",
+                  style: TextStyle(backgroundColor: Colors.red),
+                )),
+
               ],
             );
           },
@@ -278,6 +287,15 @@ class _RegistrationPageState extends State<RegistrationPage> {
     setState(() {});
   }
 
+   singinWithGoogle(){
+     ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.g_mobiledata), label: Text("Singin With Google"));
+   }
+   singinWithFacebook(){
+
+     ElevatedButton.icon(onPressed: (){}, icon: Icon(Icons.facebook), label: Text("Singin With Facebook"));
+   }
+
+
   registration() async{
     String name = nameController.text.toString();
     String phoneNumber = phoneController.text.toString();
@@ -298,9 +316,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
         });
         if(user != null){
           Fluttertoast.showToast(
-              msg: "registration Success",
+              msg: "Registration Success",
                   backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
+            gravity: ToastGravity.TOP,
             toastLength: Toast.LENGTH_SHORT,
             timeInSecForIosWeb: 3,
 
@@ -329,9 +347,16 @@ class _RegistrationPageState extends State<RegistrationPage> {
             'registeredBy':registeredBy,
           };
           _databaseReference.child(user.uid).set(users);
-          Navigator.push(context, MaterialPageRoute(builder: (context)=>DashBoard()));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=>Profile()));
 
         }else{
+          Fluttertoast.showToast(
+            msg: "Something is wrong",
+            backgroundColor: Colors.red,
+            gravity: ToastGravity.TOP,
+            toastLength: Toast.LENGTH_SHORT,
+            timeInSecForIosWeb: 3,
+          );
           print("Something is wrong");
         }
       }catch(e){

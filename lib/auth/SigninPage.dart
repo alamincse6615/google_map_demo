@@ -4,8 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_map_demo/auth/dashboard.dart';
+import 'package:google_map_demo/dashboard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_map_demo/auth/profile.dart';
+import 'package:google_map_demo/auth/regestration.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -16,13 +18,11 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
-
   _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
 
     return firebaseApp;
   }
-
 
   bool loginWithEmail = true;
   String loginWithSectedSection = "Login With ";
@@ -92,13 +92,26 @@ class _LoginPageState extends State<LoginPage> {
                     child: const Text('Login',style: TextStyle(fontSize: 26),),
                     onPressed: () {
                       singin();
-
-
                     },
                   )
               ),
             ),
-
+            Row(
+              children: <Widget>[
+                const Text('Create new account?'),
+                TextButton(
+                  child: const Text(
+                    'Regestration',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                  onPressed: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RegistrationPage()));
+                  },
+                )
+              ],
+              mainAxisAlignment: MainAxisAlignment.center,
+            ),
             ClipRRect(borderRadius:BorderRadius.circular(10),
               child: Container(
                 color: Colors.green,
@@ -118,8 +131,6 @@ class _LoginPageState extends State<LoginPage> {
 
               ),
             ),
-
-
           ],
         ),
       ),
@@ -178,16 +189,25 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
       });
       if(user != null){
+
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Profile()));
         Fluttertoast.showToast(
-            msg: "Singin Success",
-            backgroundColor: Colors.red,
-            gravity: ToastGravity.CENTER,
+          msg: "Singin Success",
+          backgroundColor: Colors.red,
+          gravity: ToastGravity.TOP,
+          toastLength: Toast.LENGTH_SHORT,
+          timeInSecForIosWeb: 3,
+
+
+        );
+      }else{
+        Fluttertoast.showToast(
+          msg: "Something is wrong",
+          backgroundColor: Colors.red,
+          gravity: ToastGravity.TOP,
           toastLength: Toast.LENGTH_SHORT,
           timeInSecForIosWeb: 3,
         );
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>DashBoard()));
-
-      }else{
         print("Something is wrong");
       }
     }catch(e){
@@ -195,4 +215,5 @@ class _LoginPageState extends State<LoginPage> {
     }
 
   }
+
 }
