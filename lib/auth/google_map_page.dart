@@ -28,6 +28,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     getCurrentLocation();
     getUserData();
 
+
   }
 
 
