@@ -15,7 +15,7 @@ class GoogleMapPage extends StatefulWidget {
 class _GoogleMapPageState extends State<GoogleMapPage> {
   Position? location;
   LatLng _latLng =  LatLng(23.56, 90.45);
-  Completer<GoogleMapController> _controller = Completer();
+  GoogleMapController? _controller;
   Set<Marker> _markers = {};
   late UserModel _userModel;
   List<UserModel> userList = [];
@@ -54,6 +54,12 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   getCurrentLocation()async{
     var currentLocation = await Geolocator.getCurrentPosition();
     _latLng = LatLng(currentLocation.latitude, currentLocation.longitude);
+    _controller!.animateCamera(
+        CameraUpdate.newCameraPosition(
+            CameraPosition(target: _latLng, zoom: 17)
+          //17 is new zoom level
+        )
+    );
     setState(() {
 
     });
@@ -97,7 +103,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         home: Scaffold(
           body: location!=null?GoogleMap(
               onMapCreated:(GoogleMapController controller){
-                _controller.complete(controller);
+                _controller = controller;
               },
               initialCameraPosition: _kGoogle,
               markers: _markers,

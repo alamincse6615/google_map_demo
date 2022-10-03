@@ -17,22 +17,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   _firebaseInitialize()async{
     FirebaseApp firebaseApp =await Firebase.initializeApp();
 
     return firebaseApp;
   }
-
   bool loginWithEmail = true;
   String loginWithSectedSection = "Login With ";
   TextEditingController emailController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-
   var textshow =true;
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,7 +167,6 @@ class _LoginPageState extends State<LoginPage> {
       loginWithEmail = true;
     setState(() {});
   }
-
 
   singin()async{
 
